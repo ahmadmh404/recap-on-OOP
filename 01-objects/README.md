@@ -79,3 +79,25 @@ Team.prototype.addMember = function (memberName) {
   this.members.push(memberName);
 };
 ```
+
+### REASSIGNMENT vs. MUTATION
+
+#### Re-Assignment
+
+```js
+obj.prop = { key: value };
+```
+
+Using this syntax you cut the link to the prototype property. (because you are assigning a the `props` to the instance).
+
+Instead, it creates a brand-new property for this instance of the Constructor, shadowing the prototype, leading to leaving (not corrupting) other instances' data alone.
+
+#### Mutation
+
+```js
+obj.prop.key = value;
+```
+
+Because the instance itself doesn't contains it'sown `prop` and prototype does, the prototype's `prop` value in the memory location will be replaced with the new value
+
+Which means when changing one instance's `prop` value this will change it's value in all existing instances.

@@ -27,7 +27,7 @@ type CarName = typeof car.name;
 type CarBioReturnType = ReturnType<typeof car.bio>;
 
 // Add a memeber that doesn't exist in the type
-const car2: CarType = {
+const car3: CarType = {
   name: "Nisan",
   model: 2109,
   bio() {

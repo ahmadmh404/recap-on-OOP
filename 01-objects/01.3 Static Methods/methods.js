@@ -124,7 +124,7 @@ const O = Object.create(Object.prototype, {
 /**
  * 03: defineProperties
  * define new or modify existing properties directly on an object
- * Syntax:Object.defineProperties(obj, {...properties})
+ * Syntax:Object.defineProperties(obj, {props})
  * see [[`./README.md`]] for more details
  * return the new modified/defined object.
  */
@@ -132,13 +132,154 @@ const O = Object.create(Object.prototype, {
 const userProfile = {};
 
 Object.defineProperty(userProfile, "id", {
-  value: "USER_9921",
-  writeable: false,
-  enumerable: false,
-  configurable: false,
+  get() {
+    return crypto.randomUUID();
+  },
+  set(value) {
+    console.log(value);
+    // this.id = value;
+  },
 });
 
 userProfile.email = "user@mail.com";
-userProfile.id = crypto.randomUUID();
+userProfile.id = "123";
 
-console.log(Object.keys(userProfile));
+// console.log(Object.entries(userProfile));
+
+/**
+ * 04: defineProperty
+ * define new or modify existing properties directly on an object
+ * Syntax:Object.defineProperty(obj, key, { properties })
+ * see [[`./README.md`]] for more details
+ * return the new modified/defined object.
+ */
+
+const config = {};
+let themeValue = "";
+
+Object.defineProperty(config, "theme", {
+  get() {
+    return themeValue;
+  },
+
+  set(value) {
+    themeValue = value === "light" ? "light" : "dark";
+  },
+
+  configurable: false,
+  enumerable: true,
+});
+
+config.theme = "light";
+
+// console.log(config.theme);
+
+/**
+ * Preserve descriptor properties
+ * (to avoid DRY I guess and for security reasons).
+ */
+
+/**
+ * 1. Using null prototype
+ * define the main object as null prototype so it doesn't inherit any properties from global objects.
+ * This is very powerful for security reasons.
+ */
+
+const app = {};
+
+const main = Object.create(null);
+main.onCodeInjection = function () {
+  return "Nice try hahaha, getta hell out of here!";
+};
+
+Object.defineProperty(app, "main", {
+  value: main,
+  writable: true,
+  configurable: false,
+  enumerable: false,
+});
+
+// console.log("Trying to inject some code...", app.main.onCodeInjection());
+
+/**
+ * 2. Object.freeze()
+ * Prevent adding, removing properties from the object prototype
+ */
+
+// ================== Error: Attempt to define a property on an object that is not extensible ==================
+// Object.freeze(app.main);
+
+Object.defineProperty(app.main, "greeting", {
+  value: "Hello, World!",
+});
+
+// console.log(app.main.greeting);
+
+/**
+ * Enumerable Attributes
+ * yes -> shown in Object.keys and obj.prop
+ * false -> doesn't
+ */
+
+const a = {};
+
+Object.defineProperties(a, {
+  a: {
+    value: 1,
+    enumerable: true,
+  },
+
+  b: {
+    value: 2,
+    enumerable: false,
+  },
+
+  c: { value: 1 }, // here the enumerable defaults to false.
+});
+
+a.d = 4; // when assigning a prop the enumerable defaults to true.
+
+const p = { ...a };
+
+// console.log({
+//   a: p.a,
+//   b: p.b,
+//   c: p.c,
+//   d: p.d,
+// });
+
+/**
+ * Configurable attribute
+ * yes -> we can play with it's settings and also delete it.
+ * no -> we can't play with it's settings or delete it
+ */
+
+const o = {};
+
+Object.defineProperty(o, "a", {
+  get() {
+    return 2;
+  },
+
+  configurable: false,
+});
+
+// Object.defineProperty(o, "a", {
+//   value: 1,
+// });
+
+// Object.defineProperty(o, "a", {
+//   set() {},
+// });
+
+// Object.defineProperty(o, "a", {
+//   configurable: true,
+// });
+
+// Object.defineProperty(o, "a", {
+//   get() {
+//     return 1;
+//   },
+// });
+
+// delete o.a;

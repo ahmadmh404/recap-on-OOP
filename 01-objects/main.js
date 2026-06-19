@@ -268,6 +268,7 @@ delete player.score;
 
 function Team(name) {
   this.name = name;
+  // this.members = [];
 }
 
 // Attach an array to the prototype
@@ -276,8 +277,30 @@ Team.prototype.members = [];
 const alpha = new Team("Alpha");
 const beta = new Team("Beta");
 
-// alpha.members.push("John", "Ahmad", "ali");
+// This is MUTATIONS Which Cause Data to be shared
+alpha.members.push("John", "Ahmad", "ali");
 // alpha.members.pop();
 
-// console.log(alpha.members);
-console.log(Team.prototype.members);
+// console.log(beta.members);
+// console.log(Team.prototype.members);
+
+/**
+ * Quiz 7: Mutation vs Reassignment
+ * Let's see if you can catch the nuance of this rule. Look at this slight modification to the breakdown pattern:
+ */
+
+function Configuration() {}
+
+Configuration.prototype.settings = { theme: "dark" };
+// Configuration.prototype.settings.them = "dark";
+
+const userConfig = new Configuration();
+const systemConfig = new Configuration();
+
+// This is ASSIGNMENT Which Doesn't Cause Data to be shared
+userConfig.settings = { theme: "light" };
+
+console.log({
+  user: userConfig.settings,
+  system: systemConfig.settings,
+});
