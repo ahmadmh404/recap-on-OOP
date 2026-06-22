@@ -140,11 +140,11 @@ const product1 = Product.fromPayload(id, productTitle, price1);
 const product2 = Product.fromPayload(id, productTitle, price2);
 // const product3 = new Product(id, productTitle, price1); Not supposed to be called like this.
 
-console.log({
-  product1: { ...product1 },
-  product2: { ...product2 },
-  //   product3: { ...product3 },
-});
+// console.log({
+//   product1: { ...product1 },
+//   product2: { ...product2 },
+//   //   product3: { ...product3 },
+// });
 
 // {
 //   product: {
@@ -161,7 +161,7 @@ console.log({
  * - You are building an active user monitoring dashboard for a server cluster.
  *  - Every time a new session object is spun up via your class, you must instantly track it.
  *
- * -The Structural Constraint:
+ * - The Structural Constraint:
  *  - You need a single variable that keeps count of the total number of instances currently alive in memory.
  *  - This count must increase automatically by 1 every single time a session is initialized.
  *
@@ -170,3 +170,27 @@ console.log({
  *   - Define a static property to act as the global tracking counter.
  *   - Structure your constructor so that it assigns a unique instance property (like username) and directly updates that global class counter.
  */
+
+class UserSession {
+  static sessionsCount = 0;
+
+  // to access static properties you should use this syntax Class.props
+  // to manipulate it use prop++, prop--
+  constructor(username, device) {
+    this.username = username;
+    this.device = device;
+
+    // =========== Wrong =============
+    // this.sessionsCount++;
+
+    // =========== Correct ============
+    UserSession.sessionsCount++;
+  }
+}
+
+const s1 = new UserSession("Ahmad", "Windows");
+const s2 = new UserSession("Ahmad ", '"Android');
+
+console.log({
+  sessionsCount: UserSession.sessionsCount,
+});
